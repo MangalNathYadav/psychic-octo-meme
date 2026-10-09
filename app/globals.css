@@ -1,0 +1,261 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------------------------------------------------------------
+   SCAMSHIELD AI · MINIMALIST LIGHT & COLOR PALETTES
+   Inspired by ElevenLabs Modern SaaS Design System:
+   - 4 High-Craft Light Themes + 1 Obsidian Stealth Dark
+   - Hairline borders, soft glassmorphism & elevated cards
+   ------------------------------------------------------------- */
+
+/* 1. ELEVEN CLEAN LIGHT (Default) */
+:root,
+[data-theme="light"] {
+  --bg: #f9fafb;
+  --surface: #ffffff;
+  --surface-subtle: #f4f4f5;
+  --surface-glass: rgba(255, 255, 255, 0.85);
+  --border: #e4e4e7;
+  --border-subtle: #f4f4f5;
+  --border-glass: rgba(228, 228, 231, 0.75);
+  --border-hover: #a1a1aa;
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --accent: #18181b;
+  --accent-subtle: rgba(24, 24, 27, 0.05);
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  --card-hover-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+  --tile-bg: #f4f4f6;
+  --tile-border: #e4e4e7;
+}
+
+/* 2. GLASS MINT & EMERALD LIGHT */
+[data-theme="green"] {
+  --bg: #f2fbf6;
+  --surface: #ffffff;
+  --surface-subtle: #e6f7ee;
+  --surface-glass: rgba(255, 255, 255, 0.88);
+  --border: #d1fae5;
+  --border-subtle: #e6f7ee;
+  --border-glass: rgba(209, 250, 229, 0.75);
+  --border-hover: #10b981;
+  --text-primary: #064e3b;
+  --text-secondary: #065f46;
+  --text-muted: #059669;
+  --accent: #059669;
+  --accent-subtle: rgba(5, 150, 105, 0.08);
+  --card-shadow: 0 1px 3px 0 rgba(5, 150, 105, 0.04);
+  --card-hover-shadow: 0 10px 25px -4px rgba(5, 150, 105, 0.08);
+  --tile-bg: #ecfdf5;
+  --tile-border: #d1fae5;
+}
+
+/* 3. LAVENDER FROST LIGHT */
+[data-theme="purple"] {
+  --bg: #fbf8ff;
+  --surface: #ffffff;
+  --surface-subtle: #f3e8ff;
+  --surface-glass: rgba(255, 255, 255, 0.88);
+  --border: #e9d5ff;
+  --border-subtle: #f3e8ff;
+  --border-glass: rgba(233, 213, 255, 0.75);
+  --border-hover: #9333ea;
+  --text-primary: #3b0764;
+  --text-secondary: #581c87;
+  --text-muted: #7c3aed;
+  --accent: #7c3aed;
+  --accent-subtle: rgba(124, 58, 237, 0.08);
+  --card-shadow: 0 1px 3px 0 rgba(124, 58, 237, 0.04);
+  --card-hover-shadow: 0 10px 25px -4px rgba(124, 58, 237, 0.08);
+  --tile-bg: #f5f3ff;
+  --tile-border: #ede9fe;
+}
+
+/* 4. SOLAR SAND & WARM AMBER LIGHT */
+[data-theme="yellow"] {
+  --bg: #fffdf7;
+  --surface: #ffffff;
+  --surface-subtle: #fef3c7;
+  --surface-glass: rgba(255, 255, 255, 0.88);
+  --border: #fde68a;
+  --border-subtle: #fef3c7;
+  --border-glass: rgba(253, 230, 138, 0.75);
+  --border-hover: #d97706;
+  --text-primary: #451a03;
+  --text-secondary: #78350f;
+  --text-muted: #b45309;
+  --accent: #d97706;
+  --accent-subtle: rgba(217, 119, 6, 0.08);
+  --card-shadow: 0 1px 3px 0 rgba(217, 119, 6, 0.04);
+  --card-hover-shadow: 0 10px 25px -4px rgba(217, 119, 6, 0.08);
+  --tile-bg: #fffbeb;
+  --tile-border: #fef3c7;
+}
+
+/* 5. OBSIDIAN STEALTH DARK */
+[data-theme="black"] {
+  --bg: #09090b;
+  --surface: #121216;
+  --surface-subtle: #1c1c22;
+  --surface-glass: rgba(18, 18, 22, 0.85);
+  --border: #27272a;
+  --border-subtle: #1f1f23;
+  --border-glass: rgba(39, 39, 42, 0.8);
+  --border-hover: #52525b;
+  --text-primary: #f4f4f6;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --accent: #10b981;
+  --accent-subtle: rgba(16, 185, 129, 0.15);
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --card-hover-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.6);
+  --tile-bg: #18181b;
+  --tile-border: #27272a;
+}
+
+html, body {
+  background-color: var(--bg) !important;
+  color: var(--text-primary) !important;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  letter-spacing: -0.012em;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Minimalist Glass Card */
+.glass-panel {
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+}
+
+/* Elevated Clean Surface Card */
+.surface-card {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--card-shadow);
+  transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.surface-card-interactive {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.surface-card-interactive:hover {
+  border-color: var(--border-hover) !important;
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-2px);
+}
+
+/* Quick Action Tile (ElevenLabs Top 6 Cards Style) */
+.action-card-tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.action-card-tile:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-3px);
+}
+
+/* Subtle, refined scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* -------------------------------------------------------------
+   LAZY LOADING SKELETON & REVEAL ANIMATIONS
+   Hardware-accelerated CSS animations for buttery smooth UX
+   ------------------------------------------------------------- */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface-subtle) 0%,
+    var(--border) 50%,
+    var(--surface-subtle) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.98);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes scanSweep {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(300%);
+  }
+}
+
+.animate-scan-sweep {
+  animation: scanSweep 1.8s infinite ease-in-out;
+}
+
+/* Stagger helper classes */
+.stagger-1 { animation-delay: 40ms; }
+.stagger-2 { animation-delay: 80ms; }
+.stagger-3 { animation-delay: 120ms; }
+.stagger-4 { animation-delay: 160ms; }
+.stagger-5 { animation-delay: 200ms; }
+.stagger-6 { animation-delay: 240ms; }
