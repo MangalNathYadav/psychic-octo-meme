@@ -19,10 +19,8 @@ import {
 } from "lucide-react";
 import { Language } from "@/lib/i18n";
 import { decodeQrFromImageFile } from "@/lib/qrDecoder";
-import { saveUserScanRecord, subscribeToRealtimeThreatReports, ThreatReport } from "@/lib/firebase";
+import { saveUserScanRecord } from "@/lib/firebase";
 import { User } from "firebase/auth";
-import QuickActionGrid from "@/components/QuickActionGrid";
-import TwoColumnSection from "@/components/TwoColumnSection";
 
 interface ScannerViewProps {
   user: User | null;
@@ -49,16 +47,7 @@ export default function ScannerView({
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [qrDecodeMsg, setQrDecodeMsg] = useState<{ text: string; success: boolean } | null>(null);
-  const [liveThreatReports, setLiveThreatReports] = useState<ThreatReport[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Subscribe to live threat reports for TwoColumnSection feed
-  useEffect(() => {
-    const unsub = subscribeToRealtimeThreatReports((reports) => {
-      setLiveThreatReports(reports);
-    });
-    return () => unsub();
-  }, []);
 
   // Update when initialInput changes
   useEffect(() => {
@@ -473,50 +462,6 @@ export default function ScannerView({
           t={t}
         />
       )}
-
-      {/* Hero Quick Action 6-Card Row */}
-      <div className="pt-2">
-        <QuickActionGrid
-          onSelectAction={(action) => {
-            if (action === "omni" || action === "url") {
-              setScannerMode("url");
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            } else if (action === "message") {
-              setScannerMode("message");
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            } else if (action === "qr") {
-              setScannerMode("qr");
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          }}
-          t={t}
-        />
-      </div>
-
-      {/* Two Column Section: Live Threat Stream & Defense Engines */}
-      <div className="pt-2">
-        <TwoColumnSection
-          threatFeed={liveThreatReports}
-          onSelectThreat={(target, type) => {
-            const mappedType = type === "omni" ? "url" : type;
-            setScannerMode(mappedType);
-            setInputValue(target);
-            triggerAnalysis(mappedType, target);
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          onExploreLibrary={() => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          onSelectEngine={(mode) => {
-            setScannerMode(mode);
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          onBroadcastModal={() => {
-            if (onOpenAiAdvisor) onOpenAiAdvisor();
-          }}
-          t={t}
-        />
-      </div>
     </div>
   );
 }

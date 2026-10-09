@@ -3,17 +3,11 @@
 import React, { useState } from "react";
 import { 
   ShieldCheck, 
-  ShieldAlert, 
   Globe, 
   QrCode, 
   MessageSquare, 
   ArrowUpRight, 
-  CheckCircle2, 
-  AlertTriangle, 
-  ExternalLink,
-  ChevronRight,
-  Shield,
-  Layers
+  ChevronRight
 } from "lucide-react";
 import { ThreatReport } from "@/lib/firebase";
 
@@ -36,72 +30,7 @@ export default function TwoColumnSection({
 }: TwoColumnSectionProps) {
   const [filter, setFilter] = useState<"all" | "high" | "upi" | "phish">("all");
 
-  const sampleLibrary = [
-    {
-      id: "lib-1",
-      title: "SBI YONO Typosquatting Clone",
-      target: "http://sbl-kyc-update.xyz/login.php",
-      type: "url" as const,
-      category: "phish",
-      riskScore: 94,
-      desc: "Typosquatted domain (<7 days old) harvesting credentials with unverified SSL certificate.",
-      avatarGradient: "from-purple-500 to-indigo-600",
-      verifiedThreat: true,
-      badge: "Phishing Clone"
-    },
-    {
-      id: "lib-2",
-      title: "BESCOM Disconnection Notice (Hindi)",
-      target: "प्रिय ग्राहक आपका बिजली बिल बकाया है आज रात 9:30 बजे बिजली काट दी जाएगी तुरंत इस लिंक पर बिल भरें",
-      type: "message" as const,
-      category: "high",
-      riskScore: 89,
-      desc: "Panic induction SMS in Hindi threatening immediate power cut to coerce instant payment.",
-      avatarGradient: "from-amber-500 to-rose-500",
-      verifiedThreat: true,
-      badge: "Social Eng."
-    },
-    {
-      id: "lib-3",
-      title: "Reverse UPI 'Scan to Receive ₹5,000'",
-      target: "upi://pay?pa=scammer89@ybl&pn=SBI%20Refund%20Dept&am=5000&cu=INR&tn=Scan%20to%20Receive%20Cashback",
-      type: "qr" as const,
-      category: "upi",
-      riskScore: 92,
-      desc: "Reverse-charge fraud disguised as cashback; scanning a QR can only debit funds.",
-      avatarGradient: "from-emerald-500 to-teal-600",
-      verifiedThreat: true,
-      badge: "Reverse Debit"
-    },
-    {
-      id: "lib-4",
-      title: "YONO Mobile APK Dropper SMS",
-      target: "http://sbi-yono-apk.buzz/download.apk",
-      type: "url" as const,
-      category: "phish",
-      riskScore: 96,
-      desc: "Malicious sideloading APK link harvesting 2FA SMS OTP permissions on Android devices.",
-      avatarGradient: "from-blue-600 to-cyan-500",
-      verifiedThreat: true,
-      badge: "Malware Link"
-    },
-    {
-      id: "lib-5",
-      title: "Official State Bank of India Portal",
-      target: "https://www.onlinesbi.sbi/portal/web/home",
-      type: "url" as const,
-      category: "all",
-      riskScore: 4,
-      desc: "Verified authentic banking portal with EV SSL certificate and official registry.",
-      avatarGradient: "from-emerald-600 to-green-400",
-      verifiedThreat: false,
-      isLegit: true,
-      badge: "Verified Legit"
-    }
-  ];
-
-  // Merge live incoming threat reports from Firebase with curated samples
-  const liveItems = (threatFeed || []).map((t, idx) => ({
+  const allItems = (threatFeed || []).map((t, idx) => ({
     id: t.id || `live-${idx}`,
     title: t.summary ? t.summary.slice(0, 36) + "..." : "Citizen Threat Report",
     target: t.target,
@@ -114,8 +43,6 @@ export default function TwoColumnSection({
     isLegit: t.riskLevel === "SAFE" || t.riskScore < 30,
     badge: t.riskLevel === "SAFE" ? "Verified Safe" : t.type === "qr" ? "Reverse Trap" : "Threat Sig."
   }));
-
-  const allItems = [...liveItems, ...sampleLibrary];
 
   const filteredItems = allItems.filter(item => {
     if (filter === "all") return true;

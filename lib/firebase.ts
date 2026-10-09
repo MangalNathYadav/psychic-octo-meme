@@ -139,105 +139,8 @@ export interface SocialStory {
   verified?: boolean;
 }
 
-// Seed telemetry reports
-const initialSeedReports: ThreatReport[] = [
-  {
-    id: "sample-1",
-    type: "url",
-    target: "http://sbl-kyc-update.xyz/login.php",
-    riskScore: 94,
-    riskLevel: "HIGH_RISK",
-    summary: "SBI Typosquatting domain (<7 days old) harvesting credentials with unverified SSL certificate.",
-    flags: ["Domain Age < 7 Days", "Known Typosquatting Pattern", "Missing EV SSL", "High Urgency Action"],
-    timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
-    userNotes: "Received via SMS alleging YONO account block."
-  },
-  {
-    id: "sample-2",
-    type: "qr",
-    target: "upi://pay?pa=scammer89@ybl&pn=Electricity%20Dept&am=1&cu=INR",
-    riskScore: 88,
-    riskLevel: "HIGH_RISK",
-    summary: "Reverse QR Scam: Payee claims Electricity Dept but routes to individual VPA with auto-debit request.",
-    flags: ["Payee Name Mismatch", "Reverse Charge Vector", "Unregistered Merchant VPA"],
-    timestamp: new Date(Date.now() - 1000 * 60 * 42).toISOString(),
-    userNotes: "Electricity bill disconnection warning pasted on door."
-  },
-  {
-    id: "sample-3",
-    type: "message",
-    target: "Dear customer your SBI Netbanking is blocked. Update Pan card click here immediately.",
-    riskScore: 91,
-    riskLevel: "HIGH_RISK",
-    summary: "Classic panic-induction social engineering attempting credential harvesting under 24hr threat.",
-    flags: ["Urgency Score: 92/100", "Authority Impersonation: State Bank of India", "Panic Trigger: Blocked Account"],
-    timestamp: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
-    userNotes: "SMS sent from unknown 10-digit number +91-9876543210"
-  },
-  {
-    id: "sample-4",
-    type: "url",
-    target: "https://www.onlinesbi.sbi/",
-    riskScore: 4,
-    riskLevel: "SAFE",
-    summary: "Legitimate State Bank of India secure portal with authentic certificate and trusted TLD.",
-    flags: ["Verified Official Domain", "Valid EV SSL Certificate", "Established Domain Age (>15 yrs)"],
-    timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-    userNotes: "Official NetBanking URL check."
-  }
-];
-
-// Seed initial social awareness stories
-const initialSeedStories: SocialStory[] = [
-  {
-    id: "story-1",
-    title: "Fake BESCOM Electricity Disconnection SMS at 9:15 PM",
-    authorName: "Rohan Sharma",
-    userId: "demo-user-1",
-    scamType: "ELECTRICITY_BILL",
-    lossAmount: "₹0 (Shielded by ScamShield)",
-    status: "PREVENTED",
-    story: "Received an SMS stating our power will be disconnected at 9:30 PM due to unpaid bill of ₹2,850. The message had a link to a site claiming to be BESCOM. I pasted the link into ScamShield and it immediately flagged the .live domain and unverified personal UPI handle. Called our electricity board helpline the next morning and confirmed my bills were already fully cleared!",
-    lessonLearned: "Utilities never threaten immediate disconnection via random 10-digit mobile SMS. Always cross-check on official portal or bill receipt.",
-    likesCount: 38,
-    likedBy: [],
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(),
-    verified: true
-  },
-  {
-    id: "story-2",
-    title: "OLX Buyer sent 'Scan this QR to Receive Advance' Trap",
-    authorName: "Pooja V.",
-    userId: "demo-user-2",
-    scamType: "UPI_FRAUD",
-    lossAmount: "₹5,000 Lost",
-    status: "LOSS_INCURRED",
-    story: "I listed a sofa on OLX. A buyer agreed immediately and sent a QR code on WhatsApp saying 'Scan to receive ₹5,000 token advance'. I scanned on PhonePe and it prompted me for my UPI PIN. He kept saying 'Yes ma'am, enter PIN to approve credit'. The moment I entered PIN, ₹5,000 was debited. Lodged a complaint on 1930 within 45 minutes.",
-    lessonLearned: "NEVER enter UPI PIN to receive money! Entering your PIN ONLY debits your account. Scanning a QR code can never deposit funds into your wallet.",
-    likesCount: 64,
-    likedBy: [],
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 18).toISOString(),
-    verified: true
-  },
-  {
-    id: "story-3",
-    title: "WhatsApp Video Call posing as CBI Officer (Digital Arrest)",
-    authorName: "Anand M.",
-    userId: "demo-user-3",
-    scamType: "WHATSAPP_CALL",
-    lossAmount: "₹0 (Shielded in time)",
-    status: "PREVENTED",
-    story: "Got a video call from an account with CBI insignia. They claimed my Aadhaar was linked to money laundering in Mumbai and threatened 'digital arrest' unless I transferred security deposit to an RBI verification account. My daughter stopped me and showed me the official advisory that police never conducts digital arrests via Skype/WhatsApp.",
-    lessonLearned: "No Indian law enforcement agency or court conducts trials or arrests over video calls. Hang up and dial 1930 immediately.",
-    likesCount: 82,
-    likedBy: [],
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 36).toISOString(),
-    verified: true
-  }
-];
-
-let localReportsCache: ThreatReport[] = [...initialSeedReports];
-let localStoriesCache: SocialStory[] = [...initialSeedStories];
+let localReportsCache: ThreatReport[] = [];
+let localStoriesCache: SocialStory[] = [];
 let localUserScansCache: { [userId: string]: UserScanRecord[] } = {};
 
 // Helper to run promise with strict timeout
@@ -475,7 +378,7 @@ export async function saveSocialStory(storyData: Omit<SocialStory, "id" | "times
   if (typeof window !== "undefined") {
     try {
       const stored = localStorage.getItem("scamshield_social_stories");
-      const list = stored ? JSON.parse(stored) : [...initialSeedStories];
+      const list = stored ? JSON.parse(stored) : [];
       list.unshift(newStory);
       localStorage.setItem("scamshield_social_stories", JSON.stringify(list));
     } catch (e) {}
@@ -625,45 +528,6 @@ export async function syncUserProfile(user: User): Promise<void> {
 }
 
 export async function getAllUsersForAdmin(): Promise<UserProfile[]> {
-  const defaultProfiles: UserProfile[] = [
-    {
-      uid: "user-lead-1",
-      displayName: "Aastik Tripathi (Lead)",
-      email: "aastik.tripathi2026@vitbhopal.ac.in",
-      role: "admin",
-      totalScans: 48,
-      lastLogin: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
-      joinedAt: "2026-09-28T10:00:00.000Z"
-    },
-    {
-      uid: "user-fullstack-2",
-      displayName: "Yash Raj Kushwaha",
-      email: "yashrajkushwaha92@gmail.com",
-      role: "admin",
-      totalScans: 62,
-      lastLogin: new Date().toISOString(),
-      joinedAt: "2026-09-28T10:00:00.000Z"
-    },
-    {
-      uid: "user-nlp-3",
-      displayName: "Palak Kalra",
-      email: "palak.kalra2026@vitbhopal.ac.in",
-      role: "analyst",
-      totalScans: 35,
-      lastLogin: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-      joinedAt: "2026-09-29T14:30:00.000Z"
-    },
-    {
-      uid: "user-qr-4",
-      displayName: "Mangal Nath Yadav",
-      email: "mangal.nath2026@vitbhopal.ac.in",
-      role: "analyst",
-      totalScans: 41,
-      lastLogin: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
-      joinedAt: "2026-09-29T16:00:00.000Z"
-    }
-  ];
-
   if (rtdb) {
     try {
       const usersRef = ref(rtdb, "user_profiles");
@@ -671,12 +535,12 @@ export async function getAllUsersForAdmin(): Promise<UserProfile[]> {
       if (snapshot.exists()) {
         const val = snapshot.val();
         const list: UserProfile[] = Object.values(val);
-        if (list.length > 0) return list;
+        return list;
       }
     } catch (e) {}
   }
 
-  return defaultProfiles;
+  return [];
 }
 
 export async function updateUserRole(uid: string, role: "admin" | "analyst" | "citizen"): Promise<boolean> {
